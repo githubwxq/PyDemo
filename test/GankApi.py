@@ -2,6 +2,9 @@ import requests
 import json
 import re
 
+# 导入bmob模块
+from bmob import *
+
 class Gank:
 
     headers={
@@ -74,26 +77,34 @@ class Gank:
 
 
 if __name__ == '__main__':
-    gankApi = Gank();
-    gankApi.getLastTodayData();
-    gankApi.saveFile("wxq", "dddddd");
-    #
-    result=gankApi.getFuLi(gankApi.parmer[3],str(1),"10")
-    print( len(result["results"]))
-    for item in result["results"]:
-        print(item["desc"])
-        gankApi.saveVideo(item["desc"],item["url"])
-    #
-    # url=result["results"][0]["url"]
+    # gankApi = Gank();
+    # gankApi.getLastTodayData();
+    # result=gankApi.getFuLi(gankApi.parmer[3],str(3),"10")
+    # print( len(result["results"]))
+    # for item in result["results"]:
+    #     print(item["desc"])
+    #     gankApi.saveVideo(item["desc"],item["url"])
 
+    # 新建一个bmob操作对象
+    b = Bmob("ea796f59c1a3d4a34f0b18b7626dd291", "6fe04b6e18174dc1fcacae5685c48046")
+    # 插入一行数据，原子计数、Pointer
+    print(
+        b.insert(
+            'Feedback', # 表名
+            BmobUpdater.increment(
+                "count", # 原子计数key
+                2, # 原子计数值
+                { # 额外信息
+                    "content": "测试python",
+                    "user": BmobPointer("_User", "0dc0356307"), # Pointer类型
+                    "date": BmobDate(1545098009351) ## Date类型
+                }
+            )
+        ).jsonData # 输出json格式的内容
+    )
 
-    #
-    # respText = requests.get("https://v.douyin.com/8EXApX/",headers=gankApi.headers).text
-    # print(respText)
-    # playAddressIndex=respText.index("playAddr:")
-    # coverIndex=respText.index("cover: ")
-    # videoUrl=respText[playAddressIndex+len("playAddr:"):coverIndex].replace(" ","")[1:-3]
-    # print(videoUrl)
+    bmobInsertUrl="https://api2.bmob.cn/1/classes/TableName"
+
 
 
 
